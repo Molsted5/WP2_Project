@@ -1,0 +1,18 @@
+app.use() + router.route() and then get, post.. is equivalent to just using get, post.. in the same file:
+
+//Modular version
+app.use('/employees', require('./routes/employees'));
+
+// Inside routes/employees.js
+router.route('/')
+  .get(...)
+  .post(...);
+
+is equivalent to:
+
+// Flat version
+app.get('/employees', ...);
+app.post('/employees', ...);
+
+---
+
