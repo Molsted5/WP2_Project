@@ -1,0 +1,46 @@
+body {
+    font-family: sans-serif;
+    background-color: #0b0c10;
+    color: #c5c6c7;
+    text-align: center;
+    padding: 2rem;
+}
+
+.nav-date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.nav-date button {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #c5c6c7;
+    cursor: pointer;
+}
+
+.nav-date button:hover {
+    color: #66fcf1;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 1rem;                                                   
+}
+
+.date {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.explanation {
+    max-width: 800px;
+    margin: 2rem auto;
+    font-size: 1rem;
+    line-height: 1.6;
+}
