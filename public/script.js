@@ -9,17 +9,17 @@ function loadApod() {
       return res.json();
     })
     .then(data => {
-      const formattedDate = new Date(data.timestamp * 1000).toLocaleString();
-
-      // Use class selectors since your HTML uses class="date" and class="latitude"
       const dateElement = document.querySelector('.date');
-      const latitudeElement = document.querySelector('.latitude');
 
-      if (dateElement && latitudeElement) {
-        dateElement.textContent = `Date: ${formattedDate}`;
-        latitudeElement.textContent = `Latitude: ${data.iss_position.latitude}`;
+      if (dateElement) {
+        let output = '';
+        data.forEach(entry => {
+          const formattedDate = new Date(entry.timestamp * 1000).toLocaleString();
+          output += `Date: ${formattedDate}, Latitude: ${entry.iss_position.latitude}, Longitude: ${entry.iss_position.longitude}`;
+        });
+        dateElement.textContent = output;
       } else {
-        console.warn('Missing DOM elements to display data');
+        console.warn('Missing DOM element to display data');
       }
     })
     .catch(err => {
@@ -30,4 +30,3 @@ function loadApod() {
 
 // Load latest data on page load
 loadApod();
-

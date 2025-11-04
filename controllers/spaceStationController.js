@@ -71,7 +71,7 @@ async function getApod(req, res) {
     const result = await db.collection('spaceStation')
       .find(query)
       .sort(sort)
-      .limit(1)
+      .limit(5)
       .toArray();
 
     if (result.length === 0) {
@@ -82,10 +82,10 @@ async function getApod(req, res) {
     const spaceStationData = result[0];
     console.log(`[${new Date().toISOString()}] Returning data:`, spaceStationData);
 
-    return res.json({
-      timestamp: spaceStationData.timestamp,
-      iss_position: spaceStationData.iss_position
-    });
+    return res.json(result.map(entry => ({
+      timestamp: entry.timestamp,
+      iss_position: entry.iss_position
+    }))); 
 
   } catch (error) {
     console.error(`[${new Date().toISOString()}] Error in getApod:`, error.message);
