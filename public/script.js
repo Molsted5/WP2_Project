@@ -1,33 +1,33 @@
-let currentDate = null;
+function loadApod() {
+  const url = '/spaceStation/get';
 
-function loadApod(date = null) {
-  const url = date ? `/apod/get?date=${date}` : '/apod/get';
   fetch(url)
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`Server responded with status ${res.status}`);
+      }
+      return res.json();
+    })
     .then(data => {
-      currentDate = data.date;
-      document.getElementById('image').src = data.url;
-      document.getElementById('date').textContent = `Date: ${data.date}`;
-      document.getElementById('explanation').textContent = data.explanation;
+      const formattedDate = new Date(data.timestamp * 1000).toLocaleString();
+
+      // Use class selectors since your HTML uses class="date" and class="latitude"
+      const dateElement = document.querySelector('.date');
+      const latitudeElement = document.querySelector('.latitude');
+
+      if (dateElement && latitudeElement) {
+        dateElement.textContent = `Date: ${formattedDate}`;
+        latitudeElement.textContent = `Latitude: ${data.iss_position.latitude}`;
+      } else {
+        console.warn('Missing DOM elements to display data');
+      }
     })
     .catch(err => {
-      console.error('Failed to load APOD:', err);
-      document.body.innerHTML = '<p>Could not load APOD. Please try again later.</p>';
+      console.error('Failed to load space station data:', err);
+      document.body.innerHTML = '<p>Could not load space station data. Please try again later.</p>';
     });
 }
 
-// Load latest APOD on page load
+// Load latest data on page load
 loadApod();
 
-// Navigation buttons
-document.getElementById('prev').addEventListener('click', () => {
-  fetch(`/apod/prev?date=${currentDate}`)
-    .then(res => res.json())
-    .then(data => loadApod(data.date));
-});
-
-document.getElementById('next').addEventListener('click', () => {
-  fetch(`/apod/next?date=${currentDate}`)
-    .then(res => res.json())
-    .then(data => loadApod(data.date));
-});

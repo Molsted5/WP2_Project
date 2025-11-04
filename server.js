@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
-const { fetchAndStoreApod } = require('./controllers/apodController');
+const { fetchAndStoreApod } = require('./controllers/spaceStationController');
 const connectDB = require('./config/dbConnection');
 const PORT = process.env.PORT || 3500;
 
@@ -27,7 +27,7 @@ async function startServer() {
     // Routes
     app.use('/', require('./routes/index'));
     app.use('/employees', require('./routes/api/employees'));
-    app.use('/apod', require('./routes/api/apod'));
+    app.use('/spaceStation', require('./routes/api/spaceStation'));
 
     app.all(/.*/, (req, res) => {
         res.status(404);
