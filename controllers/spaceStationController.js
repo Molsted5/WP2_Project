@@ -81,11 +81,15 @@ async function getApod(req, res) {
 
     const spaceStationData = result[0];
     console.log(`[${new Date().toISOString()}] Returning data:`, spaceStationData);
-
-    return res.json(result.map(entry => ({
-      timestamp: entry.timestamp,
-      iss_position: entry.iss_position
-    }))); 
+    
+    let output = [];
+    for(let i = 0; i < 3; i++){
+      output.push({
+        timestamp: result[i].timestamp,
+        iss_position: result[i].iss_position
+      });
+    }
+    return res.json(output);
 
   } catch (error) {
     console.error(`[${new Date().toISOString()}] Error in getApod:`, error.message);

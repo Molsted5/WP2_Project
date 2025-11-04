@@ -13,10 +13,10 @@ function loadApod() {
 
       if (dateElement) {
         let output = '';
-        data.forEach(entry => {
-          const formattedDate = new Date(entry.timestamp * 1000).toLocaleString();
-          output += `Date: ${formattedDate}, Latitude: ${entry.iss_position.latitude}, Longitude: ${entry.iss_position.longitude}`;
-        });
+        for(let i = 0; i < data.length; i++) {
+          const formattedDate = new Date(data[i].timestamp * 1000).toLocaleString();
+          output += `Date: ${formattedDate}, Latitude: ${data[i].iss_position.latitude}, Longitude: ${data[i].iss_position.longitude}`;
+        }
         dateElement.textContent = output;
       } else {
         console.warn('Missing DOM element to display data');
