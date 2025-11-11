@@ -37,24 +37,26 @@ async function fetchAndStoreApod() {
 
 
 // keep in mind that it only starts when controlelr is first loaded and that the isFecthing bool is independent of the actual fetching function, which might lead to conflicts with future callers.
-setInterval(async () => {
-  if (isFetching) {
-    console.warn(`[${new Date().toISOString()}] Skipping fetch — previous run still in progress`);
-    return;
-  }
-
-  isFetching = true;
-  console.log(`[${new Date().toISOString()}] Triggered interval fetch`);
-
-  try {
-    await fetchAndStoreApod();
-  } catch (err) {
-    console.error(`[${new Date().toISOString()}] Unexpected error in interval:`, err.message);
-  } finally {
-    isFetching = false;
-    console.log(`[${new Date().toISOString()}] Fetch cycle complete`);
-  }
-}, 10000);
+function startSpaceFetchInterval() {
+  setInterval(async () => {
+    if (isFetching) {
+      console.warn(`[${new Date().toISOString()}] Skipping fetch — previous run still in progress`);
+      return;
+    }
+  
+    isFetching = true;
+    console.log(`[${new Date().toISOString()}] Triggered interval fetch`);
+  
+    try {
+      await fetchAndStoreApod();
+    } catch (err) {
+      console.error(`[${new Date().toISOString()}] Unexpected error in interval:`, err.message);
+    } finally {
+      isFetching = false;
+      console.log(`[${new Date().toISOString()}] Fetch cycle complete`);
+    }
+  }, 10000);
+}
 
 async function getApod(req, res) {
   try {
@@ -100,5 +102,6 @@ async function getApod(req, res) {
 
 module.exports = {
   fetchAndStoreApod,
+  startSpaceFetchInterval,
   getApod
 };

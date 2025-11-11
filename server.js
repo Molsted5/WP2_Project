@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
-const { fetchAndStoreApod } = require('./controllers/spaceStationController');
+const { startSpaceFetchInterval } = require('./controllers/spaceStationController');
 const connectDB = require('./config/dbConnection');
 const PORT = process.env.PORT || 3500;
 
@@ -40,7 +40,7 @@ async function startServer() {
         }
     }); 
 
-    await fetchAndStoreApod();
+    startSpaceFetchInterval();
     
     // Start server
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
