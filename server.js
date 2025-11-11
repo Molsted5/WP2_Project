@@ -22,23 +22,29 @@ async function startServer() {
     app.use(cors(corsOptions)); // cross origin resource sharing. Helps during development, because frontend and backend might run on different localhost, if frameworks like react or angular are used
     app.use(express.urlencoded({ extended: false })); // enables express to parse URL-encoded form data
     app.use(express.json()); // enables express to parse incoming JSON data
-    app.use(express.static(path.join(__dirname, '/public'))); // serves static and public accessible files
+    //app.use(express.static(path.join(__dirname, '/public'))); // serves static and public accessible files
+    app.use(express.static(path.join(__dirname, 'client/build')));
 
     // Routes
-    app.use('/', require('./routes/index'));
+    //app.use('/', require('./routes/index'));
     app.use('/employees', require('./routes/api/employees'));
     app.use('/spaceStation', require('./routes/api/spaceStation'));
 
-    app.all(/.*/, (req, res) => {
-        res.status(404);
-        if (req.accepts('html')) {
-            res.sendFile(path.join(__dirname, 'public', '404.html'));
-        } else if (req.accepts('json')) {
-            res.json({ error: "404 Not Found" });
-        } else {
-            res.type('txt').send("404 Not Found");
-        }
-    }); 
+    // Catch-all for react to decide
+    app.get(/.*/, (req, res) => {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+
+    // app.all(/.*/, (req, res) => {
+    //     res.status(404);
+    //     if (req.accepts('html')) {
+    //         res.sendFile(path.join(__dirname, 'public', '404.html'));
+    //     } else if (req.accepts('json')) {
+    //         res.json({ error: "404 Not Found" });
+    //     } else {
+    //         res.type('txt').send("404 Not Found");
+    //     }
+    // }); 
 
     startSpaceFetchInterval();
     

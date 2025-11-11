@@ -74,7 +74,7 @@ async function getApod(req, res) {
     const result = await db.collection('spaceStation')
       .find(query)
       .sort(sort)
-      .limit(5)   
+      .limit(20)   
       .toArray();
 
     if (result.length === 0) {

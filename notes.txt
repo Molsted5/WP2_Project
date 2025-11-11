@@ -15,4 +15,35 @@ app.get('/employees', ...);
 app.post('/employees', ...);
 
 ---
+React
+---
+
+npx create-react-app client
+
+npm uninstall react react-dom
+npm install react@18.2.0 react-dom@18.2.0
+
+---
+
+cd client
+npm start
+
+runs on 3000 in the browser
+
+or to run with node js see below
+
+---
+
+cd client
+npm run build 
+
+cd.. (root)
+node run dev
+
+runs on 3500 with node js 
+
+---
+
+root
+npm install recharts
 
