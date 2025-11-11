@@ -1,4 +1,5 @@
 const connectDB = require('../config/dbConnection');
+let isFetching = false;
 
 async function fetchAndStoreApod() {
   console.log(`[${new Date().toISOString()}] Starting fetchAndStoreApod`);
@@ -34,8 +35,8 @@ async function fetchAndStoreApod() {
   }
 }
 
-let isFetching = false;
 
+// keep in mind that it only starts when controlelr is first loaded and that the isFecthing bool is independent of the actual fetching function, which might lead to conflicts with future callers.
 setInterval(async () => {
   if (isFetching) {
     console.warn(`[${new Date().toISOString()}] Skipping fetch — previous run still in progress`);
