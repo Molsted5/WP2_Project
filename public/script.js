@@ -13,7 +13,7 @@ async function loadApod() {
       let output = '';
       for(let i = 0; i < data.length; i++) {
         const formattedDate = new Date(data[i].timestamp * 1000).toLocaleString();
-        output += `Date: ${formattedDate}, Latitude: ${data[i].iss_position.latitude}, Longitude: ${data[i].iss_position.longitude}`;
+        output += `Date: ${formattedDate}, Latitude: ${data[i].iss_position.latitude}`;
       }
       dateElement.textContent = output;
     } else {
