@@ -92,11 +92,15 @@ async function getApod(req, res) {
         iss_position: result[i].iss_position
       });
     }
+    
+    // send msg over websocket
+    //ws.send(JSON.stringify(output));
+
     return res.json(output);
 
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error in getApod:`, error.message);
-    return res.status(500).json({ error: 'Internal server error' });
+      console.error(`[${new Date().toISOString()}] Error in getApod:`, error.message);
+      return res.status(500).json({ error: 'Internal server error' });
   }
 }
 

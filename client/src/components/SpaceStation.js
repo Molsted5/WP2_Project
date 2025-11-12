@@ -11,13 +11,31 @@ import {
 
 const ws = new WebSocket('ws://localhost:3500');
 
-function SpaceStation() {
+function collectData(data) {
+  let result = [];
+  for (let i = 0; i < data.length; i++) {
+    result.push({
+      // store numeric timestamp in ms
+      time: data[i].timestamp * 1000,
+      latitude: parseFloat(data[i].iss_position.latitude),
+    });
+  }
+  return result;
+}
+
+function SpaceStation(props) {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    ws.onmessage = (event) => {
+      console.log(event);
+      let result = collectData(event.data);
+      setChartData(result);
+    };
     async function loadApod() {
       const url = '/spaceStation/get';
+
 
       try {
         const res = await fetch(url);
