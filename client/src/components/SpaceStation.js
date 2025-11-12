@@ -9,6 +9,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+const ws = new WebSocket('ws://localhost:3500');
+
 function SpaceStation() {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
