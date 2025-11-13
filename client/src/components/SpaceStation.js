@@ -17,7 +17,7 @@ function SpaceStation() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3500"); // same port as your server
+    const ws = new WebSocket("ws://localhost:3500");
 
     ws.onopen = () => {
       console.log("Connected to WebSocket server");
