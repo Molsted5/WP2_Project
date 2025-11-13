@@ -1,4 +1,5 @@
 const connectDB = require('../config/dbConnection');
+const { getWSS } = require('../config/webSocket');
 let isFetching = false;
 
 async function fetchAndStoreApod() {
@@ -94,7 +95,15 @@ async function getApod(req, res) {
     }
     
     // send msg over websocket
-    ws.send(JSON.stringify(output));
+    const wss = getWSS();
+    if (wss) {
+      const msg = JSON.stringify(output);
+      wss.clients.forEach(client => {
+        if (client.readyState === client.OPEN) {
+          client.send(msg);
+        }
+      });
+    }
 
     return res.json(output);
 

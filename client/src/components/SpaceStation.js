@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-
-const ws = new WebSocket('ws://localhost:3500');
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function collectData(data) {
   let result = [];
   for (let i = 0; i < data.length; i++) {
     result.push({
-      // store numeric timestamp in ms
       time: data[i].timestamp * 1000,
       latitude: parseFloat(data[i].iss_position.latitude),
     });
@@ -28,14 +17,31 @@ function SpaceStation() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const ws = new WebSocket("ws://localhost:3500"); // same port as your server
+
+    ws.onopen = () => {
+      console.log("Connected to WebSocket server");
+      ws.send(JSON.stringify({ type: "hello", payload: "Frontend connected!" }));
+    };
+
     ws.onmessage = (event) => {
       try {
-        let parsed = JSON.parse(event.data);
-        let result = collectData(parsed);
+        const data = JSON.parse(event.data);
+        console.log("Message from server:", data);
+        let result = collectData(data);
         setChartData(result);
       } catch (err) {
         console.error("Failed to parse:", event.data, err);
       }
+    };
+
+    ws.onclose = () => {
+      console.log("Disconnected from WebSocket server");
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+      setError("WebSocket connection failed.");
     };
 
     async function loadApod() {
@@ -65,6 +71,8 @@ function SpaceStation() {
     }
 
     loadApod();
+
+    return () => ws.close(); // cleanup on unmount
   }, []);
 
   return (

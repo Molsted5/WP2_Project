@@ -5,7 +5,7 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const { startSpaceFetchInterval } = require('./controllers/spaceStationController');
 const connectDB = require('./config/dbConnection');
-const WebSocket = require('ws');
+const { initWebSocket } = require('./config/webSocket');
 const PORT = process.env.PORT || 3500;
 const app = express();
 
@@ -52,24 +52,7 @@ async function startServer() {
     const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
     // Create WebSocket server
-    const wss = new WebSocket.Server({ server });
-
-    wss.on('connection', (ws) => {
-        console.log('Client connected');
-
-        ws.on('message', (message) => {
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    console.log(message.toString());
-                    client.send(message);
-                }
-            });
-        });
-
-        ws.on('close', () => {
-            console.log('Client disconnected');
-        });
-    });
+    const wss = initWebSocket(server);
 }
 
 startServer();
