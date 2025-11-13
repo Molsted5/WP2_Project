@@ -9,35 +9,11 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const ws = new WebSocket('ws://localhost:3500');
-
-function collectData(data) {
-  let result = [];
-  for (let i = 0; i < data.length; i++) {
-    result.push({
-      // store numeric timestamp in ms
-      time: data[i].timestamp * 1000,
-      latitude: parseFloat(data[i].iss_position.latitude),
-    });
-  }
-  return result;
-}
-
 function SpaceStation() {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    ws.onmessage = (event) => {
-      try {
-        let parsed = JSON.parse(event.data);
-        let result = collectData(parsed);
-        setChartData(result);
-      } catch (err) {
-        console.error("Failed to parse:", event.data, err);
-      }
-    };
-
     async function loadApod() {
       const url = '/spaceStation/get';
 
@@ -56,7 +32,7 @@ function SpaceStation() {
             latitude: parseFloat(data[i].iss_position.latitude),
           });
         }
-
+        
         setChartData(result);
       } catch (err) {
           console.error('Failed to load space station data:', err);
@@ -65,6 +41,9 @@ function SpaceStation() {
     }
 
     loadApod();
+
+    const intervalId = setInterval(loadApod, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

@@ -92,9 +92,6 @@ async function getApod(req, res) {
         iss_position: result[i].iss_position
       });
     }
-    
-    // send msg over websocket
-    ws.send(JSON.stringify(output));
 
     return res.json(output);
 
