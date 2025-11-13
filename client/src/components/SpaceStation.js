@@ -23,19 +23,23 @@ function collectData(data) {
   return result;
 }
 
-function SpaceStation(props) {
+function SpaceStation() {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     ws.onmessage = (event) => {
-      console.log(event);
-      let result = collectData(event.data);
-      setChartData(result);
+      try {
+        let parsed = JSON.parse(event.data);
+        let result = collectData(parsed);
+        setChartData(result);
+      } catch (err) {
+        console.error("Failed to parse:", event.data, err);
+      }
     };
+
     async function loadApod() {
       const url = '/spaceStation/get';
-
 
       try {
         const res = await fetch(url);
@@ -48,7 +52,6 @@ function SpaceStation(props) {
         let result = [];
         for (let i = 0; i < data.length; i++) {
           result.push({
-            // store numeric timestamp in ms
             time: data[i].timestamp * 1000,
             latitude: parseFloat(data[i].iss_position.latitude),
           });
@@ -56,8 +59,8 @@ function SpaceStation(props) {
 
         setChartData(result);
       } catch (err) {
-        console.error('Failed to load space station data:', err);
-        setError('Could not load space station data. Please try again later.');
+          console.error('Failed to load space station data:', err);
+          setError('Could not load space station data. Please try again later.');
       }
     }
 

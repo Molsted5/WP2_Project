@@ -94,7 +94,7 @@ async function getApod(req, res) {
     }
     
     // send msg over websocket
-    //ws.send(JSON.stringify(output));
+    ws.send(JSON.stringify(output));
 
     return res.json(output);
 
@@ -109,3 +109,6 @@ module.exports = {
   startSpaceFetchInterval,
   getApod
 };
+
+
+
