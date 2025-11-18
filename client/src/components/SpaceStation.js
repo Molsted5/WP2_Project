@@ -12,37 +12,22 @@ function collectData(data) {
   return result;
 }
 
-function SpaceStation() {
+function SpaceStation({ ws }) {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3500");
-
-    ws.onopen = () => {
-      console.log("Connected to WebSocket server");
-      ws.send(JSON.stringify({ type: "hello", payload: "Frontend connected!" }));
-    };
-
-    ws.onmessage = (event) => {
+    function handleMessage(event) {
       try {
         const data = JSON.parse(event.data);
         console.log("Message from server:", data);
-        let result = collectData(data);
-        setChartData(result);
+        setChartData(collectData(data));
       } catch (err) {
         console.error("Failed to parse:", event.data, err);
       }
-    };
+    }
 
-    ws.onclose = () => {
-      console.log("Disconnected from WebSocket server");
-    };
-
-    ws.onerror = (err) => {
-      console.error("WebSocket error:", err);
-      setError("WebSocket connection failed.");
-    };
+    ws.addEventListener("message", handleMessage);
 
     async function loadApod() {
       const url = '/spaceStation/get';
@@ -54,26 +39,20 @@ function SpaceStation() {
         }
         const data = await res.json();
         console.log(data);
-
-        let result = [];
-        for (let i = 0; i < data.length; i++) {
-          result.push({
-            time: data[i].timestamp * 1000,
-            latitude: parseFloat(data[i].iss_position.latitude),
-          });
-        }
-
+        let result = collectData(data);
         setChartData(result);
       } catch (err) {
-          console.error('Failed to load space station data:', err);
-          setError('Could not load space station data. Please try again later.');
+        console.error('Failed to load space station data:', err);
+        setError('Could not load space station data. Please try again later.');
       }
     }
 
     loadApod();
 
-    return () => ws.close(); // cleanup on unmount
-  }, []);
+    return () => {
+      ws.removeEventListener("message", handleMessage);
+    };
+  }, [ws]); // [] is enough as we dont need to depend on ws changing to render, however this futureproofs, so it is set to handle reconnecting or connection swapping. 
 
   return (
     <div className="space-station">
