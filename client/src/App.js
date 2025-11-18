@@ -10,4 +10,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; // specify the main component in the file
