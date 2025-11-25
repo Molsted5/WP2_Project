@@ -13,10 +13,10 @@ function collectData(data) {
 }
 
 function SpaceStation({ ws }) {
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState([]); // change of state schedules new return (render difference update)
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { // useEffect handles live communication orderly, which is needed because for example, parent components passing props down, ui events or setinterval timers setting state and so on can cause rerenders and this makes it unpredictable in combination with live connections, so useEffect is there to give live connections a safe place in the order of operations
     function handleMessage(event) {
       try {
         const data = JSON.parse(event.data);
@@ -52,9 +52,9 @@ function SpaceStation({ ws }) {
     return () => {
       ws.removeEventListener("message", handleMessage);
     };
-  }, [ws]); // [] is enough as we dont need to depend on ws changing to render, however this futureproofs, so it is set to handle reconnecting or connection swapping. 
+  }, [ws]); // [] and therefore only running useEffect on initial component render, would be enough, because we dont need to depend on ws changing in order to run the useEffect, however this futureproofs, so it is set to handle reconnecting or connection swapping. 
 
-  return (
+  return ( // rendered or returned anew each time useState changes
     <div className="space-station">
       {error ? (
         <p>{error}</p>

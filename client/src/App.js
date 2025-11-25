@@ -26,7 +26,7 @@ function App() {
     return () => {
       socket.close(); // cleanup on unmount (on refresh for example)
     };
-  }, []);
+  }, []); // [] means the useEffect only runs on first render. Without [], useEffect would run each time the component is rendered. With a variable with a not empty value, useEffect would run each time, that variable is updated (or changed?) 
 
   return (
     <div className="App">
