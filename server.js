@@ -7,6 +7,10 @@ const { initWebSocket } = require('./config/webSocket');
 const PORT = process.env.PORT || 3500;
 const app = express();
 
+// !!!!!
+// remember to run npm install to get node modules again
+// !!!!!
+
 async function startServer() {
     const db = await connectDB();
 
