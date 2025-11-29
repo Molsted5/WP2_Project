@@ -2,7 +2,7 @@ const connectDB = require('../config/dbConnection');
 const { getWSS } = require('../config/webSocket');
 let isFetching = false;
 
-async function fetchAndStoreApod() {
+async function fetchAndStoreSpaceStation() {
   const response = await fetch('http://api.open-notify.org/iss-now.json');
   const data = await response.json();
 
@@ -25,7 +25,7 @@ async function fetchAndStoreApod() {
     await db.collection('spaceStation').insertOne(data);
 
     const result = await queryLatest(db, 8);
-    broadcastISSData(result);
+    broadcastSpaceStationData(result);
   } catch (error) {
     console.error(`Error during DB operation:`, error);
   }
@@ -42,7 +42,7 @@ function startSpaceFetchInterval() {
     isFetching = true;
   
     try {
-      await fetchAndStoreApod();
+      await fetchAndStoreSpaceStation();
     } catch (err) {
       console.error(`Unexpected error in interval:`, err.message);
     } finally {
@@ -51,7 +51,7 @@ function startSpaceFetchInterval() {
   }, 6000);
 }
 
-async function getApod(req, res) {
+async function getSpaceStation(req, res) {
   try {
     const db = await connectDB();
     const result = await queryLatest(db, 8);
@@ -86,7 +86,7 @@ async function queryLatest(db, limit = 8) {
   return output;
 }
 
-function broadcastISSData(data) {
+function broadcastSpaceStationData(data) {
   const wss = getWSS();
   if (wss) {
     const msg = JSON.stringify(data);
@@ -100,9 +100,9 @@ function broadcastISSData(data) {
 }
 
 module.exports = {
-  fetchAndStoreApod,
+  fetchAndStoreSpaceStation,
   startSpaceFetchInterval,
-  getApod
+  getSpaceStation
 };
 
 
