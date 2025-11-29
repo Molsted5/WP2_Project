@@ -21,7 +21,6 @@ async function startServer() {
     app.use(express.static(path.join(__dirname, 'client/build')));// serves as static and public accessible files
 
     // Routes
-    app.use('/employees', require('./routes/api/employees'));
     app.use('/spaceStation', require('./routes/api/spaceStation'));
 
     // Catch-all for react to decide
