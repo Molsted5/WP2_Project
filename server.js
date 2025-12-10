@@ -18,7 +18,7 @@ async function startServer() {
     app.use((req, res, next) => {
         req.db = db;
         next();
-    });
+    }); 
 
     // Middleware
     app.use(express.json()); // enables express to parse incoming JSON data
